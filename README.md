@@ -10,5 +10,6 @@ In my opinion, it is hard to detect until we compare the module loaded in memory
 ## Bugs or issues 🐛
 * Known Issues/Bugs
   * GetProcAddress doesn't return the same address of our codecave (won't be fixed, because certain functions are cached).
+  * Code cave finder is a bit broken, I'll fix it later on.
 
 If you find any bugs or issues, feel free to report the issue or make a pull request to make the code better 😄
