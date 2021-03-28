@@ -76,7 +76,7 @@ uintptr_t ModifyExport(uintptr_t BaseAddressOfModule, std::string Function, void
         return (PIMAGE_EXPORT_DIRECTORY)(ImageBase + NtHeader->OptionalHeader.DataDirectory[0].VirtualAddress);
     };
 
-    auto WriteNonToWritableRegion = [&](uintptr_t Address, uintptr_t WriteAddress, int Size)
+    auto WriteToNonWritableRegion = [&](uintptr_t Address, uintptr_t WriteAddress, int Size)
     {
         DWORD Old;
 
@@ -91,7 +91,7 @@ uintptr_t ModifyExport(uintptr_t BaseAddressOfModule, std::string Function, void
         unsigned char JumpInstruction[] = { 0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0x69, 0x69, 0x69, 0x69, 0x69, 0x69, 0x69, 0x69 };
         *(uintptr_t*)(JumpInstruction + 6) = JumpTo;
 
-        WriteNonToWritableRegion(Address, (uintptr_t)&JumpInstruction, sizeof(JumpInstruction));
+        WriteToNonWritableRegion(Address, (uintptr_t)&JumpInstruction, sizeof(JumpInstruction));
     };
 
 
@@ -113,7 +113,7 @@ uintptr_t ModifyExport(uintptr_t BaseAddressOfModule, std::string Function, void
             auto CodeCaveForImport = (DWORD)(CodeCave - BaseAddressOfModule);
 
             CreateJump(CodeCave, (uintptr_t)FunctionAddress);
-            WriteNonToWritableRegion((uintptr_t)Addr, (uintptr_t)&CodeCaveForImport, sizeof(DWORD));
+            WriteToNonWritableRegion((uintptr_t)Addr, (uintptr_t)&CodeCaveForImport, sizeof(DWORD));
 
             break;
         }
